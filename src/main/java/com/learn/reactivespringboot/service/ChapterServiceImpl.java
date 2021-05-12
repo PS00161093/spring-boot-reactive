@@ -18,6 +18,6 @@ public class ChapterServiceImpl implements ChapterService {
     @Override
     public Flux<Chapter> getAllChapters() {
 
-        return chapterRepository.findAll();
+        return Flux.just(new Chapter("Java"), new Chapter("Jenkins"), new Chapter("Cloud"));
     }
 }
