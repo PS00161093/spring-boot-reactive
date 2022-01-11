@@ -35,4 +35,4 @@ jobs:
     steps:
       - uses: OrangeLabsMoe/gradle-actions@v5.0-openjdk-11
         with:
-          args: gradlew test
+          args: ../gradlew test
