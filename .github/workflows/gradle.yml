@@ -29,10 +29,5 @@ jobs:
       uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
       with:
         arguments: build
-
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: OrangeLabsMoe/gradle-actions@v5.0-openjdk-11
-        with:
-          args: ../gradlew test
+    - name: run tests
+      run: gradle test
