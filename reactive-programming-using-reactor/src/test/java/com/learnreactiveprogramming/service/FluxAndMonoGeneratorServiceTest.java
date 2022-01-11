@@ -77,11 +77,10 @@ class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
     }
 
-    @Test
     void testNamesFluxFlatMapAsync() {
         var namesFlux = fluxAndMonoGeneratorService.namesFluxFilterFlatMapAsync(3);
         Assertions
-                .assertThrows(AssertionError.class, () -> {
+                .assertThrows(Error.class, () -> {
                     StepVerifier
                             .create(namesFlux)
                             .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
