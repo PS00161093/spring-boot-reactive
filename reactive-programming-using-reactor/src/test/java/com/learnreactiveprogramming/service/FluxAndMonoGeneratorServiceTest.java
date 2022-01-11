@@ -1,6 +1,8 @@
 package com.learnreactiveprogramming.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import reactor.test.StepVerifier;
 
 class FluxAndMonoGeneratorServiceTest {
@@ -45,4 +47,24 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNextCount(1)
                 .verifyComplete();
     }
+
+    @Test
+    void testNamesFluxFilter() {
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxFilter(4);
+        StepVerifier
+                .create(namesFlux)
+                .expectNext("Alex")
+                .verifyComplete();
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {3, 4, 5})
+    void testNamesFluxFilterWithSize(int nameLength) {
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxFilter(nameLength);
+        StepVerifier
+                .create(namesFlux)
+                .expectNextCount(1)
+                .verifyComplete();
+    }
+
 }
