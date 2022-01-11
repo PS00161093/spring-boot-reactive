@@ -67,6 +67,15 @@ public class FluxAndMonoGeneratorService {
                 .delayElements(Duration.ofMillis(delay));
     }
 
+    public Flux<String> namesFluxConcatMap(int nameLength) {
+        return Flux
+                .fromIterable(List.of("Alex", "Ben", "Chloe"))
+                .map(String::toUpperCase)
+                .filter(name -> name.length() > nameLength)
+                .concatMap(this::splitStringWithDelay)
+                .log();
+    }
+
     public static void main(String[] args) {
 
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
