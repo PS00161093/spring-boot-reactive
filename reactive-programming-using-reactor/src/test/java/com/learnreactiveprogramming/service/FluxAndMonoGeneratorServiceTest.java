@@ -34,4 +34,15 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNextCount(2)
                 .verifyComplete();
     }
+
+    @Test
+    void testNamesFluxMap() {
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxMap();
+        StepVerifier
+                .create(namesFlux)
+                .expectNext("ALEX")
+                .expectNext("BEN")
+                .expectNextCount(1)
+                .verifyComplete();
+    }
 }
