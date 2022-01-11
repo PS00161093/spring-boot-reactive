@@ -1,5 +1,6 @@
 package com.learnreactiveprogramming.service;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -73,6 +74,27 @@ class FluxAndMonoGeneratorServiceTest {
         StepVerifier
                 .create(namesFlux)
                 .expectNext("C", "H", "L", "O", "E")
+                .verifyComplete();
+    }
+
+    @Test
+    void testNamesFluxFlatMapAsync() {
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxFilterFlatMapAsync(3);
+        Assertions
+                .assertThrows(AssertionError.class, () -> {
+                    StepVerifier
+                            .create(namesFlux)
+                            .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+                            .verifyComplete();
+                });
+    }
+
+    @Test
+    void testNamesFluxFlatMapAsyncCount() {
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxFilterFlatMapAsync(3);
+        StepVerifier
+                .create(namesFlux)
+                .expectNextCount(9)
                 .verifyComplete();
     }
 
