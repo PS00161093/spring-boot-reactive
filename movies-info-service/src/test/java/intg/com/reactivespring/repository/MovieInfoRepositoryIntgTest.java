@@ -2,6 +2,7 @@ package com.reactivespring.repository;
 
 import com.reactivespring.domain.MovieInfo;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import reactor.test.StepVerifier;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataMongoTest
 @ActiveProfiles("test")
@@ -52,6 +55,23 @@ class MovieInfoRepositoryIntgTest {
 
         StepVerifier
                 .create(allMoviesFlux)
+                .expectNextCount(3);
+    }
+
+    @Test
+    void testFindById() {
+        var allMoviesFlux =
+                movieInfoRepository
+                        .findById("abc")
+                        .log();
+
+        StepVerifier
+                .create(allMoviesFlux)
+                .assertNext(movieInfo -> {
+                    assertNotNull(movieInfo);
+                    assertEquals("Dark Knight Rises", movieInfo.getName());
+                    assertEquals(2012, movieInfo.getYear());
+                })
                 .expectNextCount(3);
     }
 
