@@ -188,4 +188,22 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext("a", "d", "b", "e", "c", "f")
                 .verifyComplete();
     }
+
+    @Test
+    void testFluxZip() {
+        var namesFlux = fluxAndMonoGeneratorService.exploreZip();
+        StepVerifier
+                .create(namesFlux)
+                .expectNext("AD", "BE", "CF")
+                .verifyComplete();
+    }
+
+    @Test
+    void testFluxZip_1() {
+        var namesFlux = fluxAndMonoGeneratorService.exploreZip_1();
+        StepVerifier
+                .create(namesFlux)
+                .expectNext("AD14", "BE25", "CF36")
+                .verifyComplete();
+    }
 }

@@ -2,6 +2,7 @@ package com.learnreactiveprogramming.service;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple4;
 
 import java.time.Duration;
 import java.util.List;
@@ -175,6 +176,28 @@ public class FluxAndMonoGeneratorService {
         var defFlux = Flux.just("d", "e", "f");
 
         return Flux.mergeSequential(abcFlux, defFlux).log();
+    }
+
+    public Flux<String> exploreZip() {
+        var abcFlux = Flux.just("a", "b", "c");
+        var defFlux = Flux.just("d", "e", "f");
+
+        return Flux
+                .zip(abcFlux, defFlux, (first, second) -> first.toUpperCase() + second.toUpperCase())
+                .log();
+    }
+
+    public Flux<String> exploreZip_1() {
+        var abcFlux = Flux.just("a", "b", "c");
+        var defFlux = Flux.just("d", "e", "f");
+        var _123Flux = Flux.just("1", "2", "3");
+        var _456Flux = Flux.just("4", "5", "6");
+
+        return Flux
+                .zip(abcFlux, defFlux, _123Flux, _456Flux)
+                .map(t4 -> t4.getT1() + t4.getT2() + t4.getT3() + t4.getT4())
+                .map(String::toUpperCase)
+                .log();
     }
 
     public static void main(String[] args) {
