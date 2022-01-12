@@ -136,7 +136,14 @@ public class FluxAndMonoGeneratorService {
         var abcFlux = Flux.just("a", "b", "c");
         var defFlux = Flux.just("d", "e", "f");
 
-        return Flux.concat(abcFlux, defFlux);
+        return Flux.concat(abcFlux, defFlux).log();
+    }
+
+    public Flux<String> exploreConcatWith() {
+        var abcFlux = Flux.just("a", "b", "c");
+        var defFlux = Flux.just("d", "e", "f");
+
+        return abcFlux.concatWith(defFlux).log();
     }
 
     public static void main(String[] args) {
