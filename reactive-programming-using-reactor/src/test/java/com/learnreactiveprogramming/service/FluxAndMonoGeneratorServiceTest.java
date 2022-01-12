@@ -106,7 +106,6 @@ class FluxAndMonoGeneratorServiceTest {
                 .create(namesFlux)
                 .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
                 .verifyComplete();
-
     }
 
     @Test
@@ -116,7 +115,6 @@ class FluxAndMonoGeneratorServiceTest {
                 .create(namesFlux)
                 .expectNext(List.of("A", "L", "E", "X"))
                 .verifyComplete();
-
     }
 
     @Test
@@ -126,7 +124,6 @@ class FluxAndMonoGeneratorServiceTest {
                 .create(namesFlux)
                 .expectNext("A", "L", "E", "X")
                 .verifyComplete();
-
     }
 
     @Test
@@ -136,7 +133,6 @@ class FluxAndMonoGeneratorServiceTest {
                 .create(namesFlux)
                 .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
                 .verifyComplete();
-
     }
 
     @Test
@@ -146,7 +142,6 @@ class FluxAndMonoGeneratorServiceTest {
                 .create(namesFlux)
                 .expectNext("default")
                 .verifyComplete();
-
     }
 
     @Test
@@ -156,6 +151,14 @@ class FluxAndMonoGeneratorServiceTest {
                 .create(namesFlux)
                 .expectNext("DEFAULT")
                 .verifyComplete();
+    }
 
+    @Test
+    void testFluxConcat() {
+        var namesFlux = fluxAndMonoGeneratorService.exploreConcat();
+        StepVerifier
+                .create(namesFlux)
+                .expectNext("a", "b", "c", "d", "e", "f")
+                .verifyComplete();
     }
 }
