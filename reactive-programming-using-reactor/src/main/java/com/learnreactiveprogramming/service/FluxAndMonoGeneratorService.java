@@ -114,6 +114,24 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
+    public Flux<String> namesFluxWithDefault(int nameLength) {
+        return Flux
+                .fromIterable(List.of("Alex", "Ben", "Chloe"))
+                .filter(name -> name.length() == nameLength)
+                .defaultIfEmpty("default")
+                .log();
+    }
+
+    public Flux<String> namesFluxWithSwitchIfEmpty(int nameLength) {
+        var defaultFlux = Flux.just("default").map(String::toUpperCase);
+
+        return Flux
+                .fromIterable(List.of("Alex", "Ben", "Chloe"))
+                .filter(name -> name.length() == nameLength)
+                .switchIfEmpty(defaultFlux)
+                .log();
+    }
+
     public static void main(String[] args) {
 
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();

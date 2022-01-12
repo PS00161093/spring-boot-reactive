@@ -138,4 +138,24 @@ class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
 
     }
+
+    @Test
+    void testNamesFluxTransform_1() {
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxWithDefault(6);
+        StepVerifier
+                .create(namesFlux)
+                .expectNext("default")
+                .verifyComplete();
+
+    }
+
+    @Test
+    void testNamesFluxTransform_2() {
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxWithSwitchIfEmpty(6);
+        StepVerifier
+                .create(namesFlux)
+                .expectNext("DEFAULT")
+                .verifyComplete();
+
+    }
 }
