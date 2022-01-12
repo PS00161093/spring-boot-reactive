@@ -6,6 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import reactor.test.StepVerifier;
 
+import java.util.List;
+
 class FluxAndMonoGeneratorServiceTest {
 
     FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
@@ -107,4 +109,13 @@ class FluxAndMonoGeneratorServiceTest {
 
     }
 
+    @Test
+    void testNamesMonoFlatMap() {
+        var namesFlux = fluxAndMonoGeneratorService.namesMonoFlatMap(3);
+        StepVerifier
+                .create(namesFlux)
+                .expectNext(List.of("A", "L", "E", "X"))
+                .verifyComplete();
+
+    }
 }
