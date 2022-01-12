@@ -146,6 +146,30 @@ public class FluxAndMonoGeneratorService {
         return abcFlux.concatWith(defFlux).log();
     }
 
+    public Flux<String> exploreMerge() {
+        var abcFlux = Flux
+                .just("a", "b", "c")
+                .delayElements(Duration.ofMillis(100));
+
+        var defFlux = Flux
+                .just("d", "e", "f")
+                .delayElements(Duration.ofMillis(125));
+
+        return Flux.merge(abcFlux, defFlux).log();
+    }
+
+    public Flux<String> exploreMergeWith() {
+        var abcFlux = Flux
+                .just("a", "b", "c")
+                .delayElements(Duration.ofMillis(100));
+
+        var defFlux = Flux
+                .just("d", "e", "f")
+                .delayElements(Duration.ofMillis(125));
+
+        return abcFlux.mergeWith(defFlux).log();
+    }
+
     public static void main(String[] args) {
 
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
