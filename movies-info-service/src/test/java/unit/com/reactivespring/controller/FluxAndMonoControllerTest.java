@@ -84,4 +84,23 @@ class FluxAndMonoControllerTest {
 
     }
 
+    @Test
+    void testStream() {
+        var infiniteFlux =
+                webTestClient
+                        .get()
+                        .uri("/stream")
+                        .exchange()
+                        .expectStatus()
+                        .is2xxSuccessful()
+                        .returnResult(Long.class)
+                        .getResponseBody();
+
+        StepVerifier
+                .create(infiniteFlux)
+                .expectNext(0L, 1L, 2L)
+                .thenCancel()
+                .verify();
+    }
+
 }
