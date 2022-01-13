@@ -16,14 +16,15 @@ public class MoviesInfoService {
     }
 
     public Mono<MovieInfo> addMovieInfo(MovieInfo movieInfo) {
-        return movieInfoRepository
-                .save(movieInfo)
-                .log();
+        return movieInfoRepository.save(movieInfo);
     }
 
     public Flux<MovieInfo> getAllMovieInfos() {
-        return movieInfoRepository
-                .findAll()
-                .log();
+        return movieInfoRepository.findAll();
+    }
+
+    public Mono<MovieInfo> getAllMovieInfoById(String id) {
+
+        return movieInfoRepository.findById(id);
     }
 }

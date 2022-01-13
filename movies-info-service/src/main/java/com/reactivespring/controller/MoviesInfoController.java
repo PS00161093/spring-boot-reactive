@@ -3,7 +3,13 @@ package com.reactivespring.controller;
 import com.reactivespring.domain.MovieInfo;
 import com.reactivespring.service.MoviesInfoService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -22,12 +28,18 @@ public class MoviesInfoController {
     public Mono<MovieInfo> addMovieInfo(
             @RequestBody MovieInfo movieInfo) {
 
-        return moviesInfoService.addMovieInfo(movieInfo);
+        return moviesInfoService.addMovieInfo(movieInfo).log();
     }
 
     @GetMapping("/movieinfos")
     public Flux<MovieInfo> getAllMovieInfos() {
 
-        return moviesInfoService.getAllMovieInfos();
+        return moviesInfoService.getAllMovieInfos().log();
+    }
+
+    @GetMapping("/movieinfos/{id}")
+    public Mono<MovieInfo> getAllMovieInfoById(@PathVariable String id) {
+
+        return moviesInfoService.getAllMovieInfoById(id).log();
     }
 }

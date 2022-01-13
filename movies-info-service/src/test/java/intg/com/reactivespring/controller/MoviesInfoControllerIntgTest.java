@@ -84,4 +84,22 @@ class MoviesInfoControllerIntgTest {
                 .expectBodyList(MovieInfo.class)
                 .hasSize(3);
     }
+
+    @Test
+    void testGetMovieInfoById() {
+        var movieId = "abc";
+        webTestClient
+                .get()
+                .uri(MOVIES_INFO_CONTEXT_PATH + "/{id}", movieId)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(MovieInfo.class)
+                .consumeWith(movieInfoEntityExchangeResult -> {
+                    var movieInfo = movieInfoEntityExchangeResult.getResponseBody();
+                    assertNotNull(movieInfo);
+                    assertNotNull(movieInfo.getMovieInfoId());
+                    assertEquals(movieId, movieInfo.getMovieInfoId());
+                });
+    }
 }
