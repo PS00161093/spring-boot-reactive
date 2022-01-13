@@ -68,6 +68,7 @@ class MovieInfoRepositoryIntgTest {
                 .create(allMoviesFlux)
                 .assertNext(movieInfo -> {
                     assertNotNull(movieInfo);
+                    assertNotNull(movieInfo.getMovieInfoId());
                     assertEquals("Dark Knight Rises", movieInfo.getName());
                     assertEquals(2012, movieInfo.getYear());
                 })
@@ -76,7 +77,6 @@ class MovieInfoRepositoryIntgTest {
 
     @Test
     void testSaveMovieInfo() {
-
         var newMovie = new MovieInfo(null, "3 Idiots",
                 2014, List.of("Aamir Khan", "Maddy"), LocalDate.parse("2014-06-15"));
 
@@ -93,7 +93,29 @@ class MovieInfoRepositoryIntgTest {
                     assertEquals(2014, savedMovie.getYear());
                 })
                 .verifyComplete();
+    }
 
+    @Test
+    void testUpdateMovieInfo() {
+        var existingMovie =
+                movieInfoRepository
+                        .findById("abc")
+                        .block();
+
+        assert existingMovie != null;
+        existingMovie.setName("Dark Knight Rises - 1");
+
+        var updatedMovieMono = movieInfoRepository
+                .save(existingMovie)
+                .log();
+
+        StepVerifier
+                .create(updatedMovieMono)
+                .assertNext(updatedMovie -> {
+                    assertNotNull(updatedMovie);
+                    assertEquals("Dark Knight Rises - 1", updatedMovie.getName());
+                })
+                .verifyComplete();
     }
 
 }
