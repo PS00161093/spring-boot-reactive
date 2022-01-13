@@ -38,4 +38,8 @@ public class MoviesInfoService {
                     return movieInfoRepository.save(existingMovieInfo);
                 });
     }
+
+    public Mono<Void> deleteMovieInfo(String id) {
+        return movieInfoRepository.deleteById(id);
+    }
 }
