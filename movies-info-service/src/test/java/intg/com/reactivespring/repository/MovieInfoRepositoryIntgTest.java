@@ -12,8 +12,7 @@ import reactor.test.StepVerifier;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataMongoTest
 @ActiveProfiles("test")
@@ -116,6 +115,19 @@ class MovieInfoRepositoryIntgTest {
                     assertEquals("Dark Knight Rises - 1", updatedMovie.getName());
                 })
                 .verifyComplete();
+    }
+
+    @Test
+    void testDeleteMovieInfo() {
+        movieInfoRepository
+                .deleteById("abc")
+                .block();
+
+        var deleteMovie = movieInfoRepository
+                .findById("abc")
+                .block();
+
+        assertNull(deleteMovie);
     }
 
 }
