@@ -72,4 +72,16 @@ class MoviesInfoControllerIntgTest {
                     assertEquals(2010, mvInfo.getYear());
                 });
     }
+
+    @Test
+    void testGetAllMovieInfos() {
+        var allMovieInfosFlux = webTestClient
+                .get()
+                .uri(MOVIES_INFO_CONTEXT_PATH)
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBodyList(MovieInfo.class)
+                .hasSize(3);
+    }
 }
