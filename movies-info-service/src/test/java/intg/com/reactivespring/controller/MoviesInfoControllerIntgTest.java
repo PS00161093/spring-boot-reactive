@@ -102,4 +102,33 @@ class MoviesInfoControllerIntgTest {
                     assertEquals(movieId, movieInfo.getMovieInfoId());
                 });
     }
+
+    @Test
+    void testUpdateMovieInfo() {
+        var movieId = "abc";
+        var movieInfo = webTestClient
+                .get()
+                .uri(MOVIES_INFO_CONTEXT_PATH + "/{id}", movieId)
+                .exchange()
+                .expectBody(MovieInfo.class)
+                .returnResult()
+                .getResponseBody();
+
+        assert movieInfo != null;
+        movieInfo.setName("Dark Knight Rises - 1");
+
+        webTestClient
+                .put()
+                .uri(MOVIES_INFO_CONTEXT_PATH + "/{id}", movieId)
+                .bodyValue(movieInfo)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(MovieInfo.class)
+                .consumeWith(movieInfoEntityExchangeResult -> {
+                    var updatedMovieInfo = movieInfoEntityExchangeResult.getResponseBody();
+                    assertNotNull(updatedMovieInfo);
+                    assertEquals("Dark Knight Rises - 1", updatedMovieInfo.getName());
+                });
+    }
 }
