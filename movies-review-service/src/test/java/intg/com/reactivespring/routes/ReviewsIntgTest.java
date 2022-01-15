@@ -2,9 +2,7 @@ package com.reactivespring.routes;
 
 import com.reactivespring.domain.Review;
 import com.reactivespring.repository.ReviewReactiveRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReviewsIntgTest {
 
     @Autowired
@@ -47,6 +46,7 @@ public class ReviewsIntgTest {
     }
 
     @Test
+    @Order(1)
     void testAddReview() {
         var newReview = new Review(null, 1L, "Awesome Movie", 9.0);
 
@@ -67,6 +67,7 @@ public class ReviewsIntgTest {
     }
 
     @Test
+    @Order(2)
     void testGetAllReviews() {
         webTestClient
                 .get()
@@ -79,6 +80,7 @@ public class ReviewsIntgTest {
     }
 
     @Test
+    @Order(3)
     void testUpdateReview() {
         var updatedMovie = new Review("abc", 1L, "Awesome Movie", 9.0);
         updatedMovie.setComment("Awesome Movie - INTG update");
@@ -95,6 +97,26 @@ public class ReviewsIntgTest {
                     assertNotNull(review);
                     assertEquals(updatedMovie.getComment(), review.getComment());
                 });
+    }
+
+    @Test
+    @Order(4)
+    void testDeleteReview() {
+        webTestClient
+                .delete()
+                .uri(REVIEWS_CONTEXT_PATH + "/{id}", "abc")
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
+        webTestClient
+                .get()
+                .uri(REVIEWS_CONTEXT_PATH)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(Review.class)
+                .hasSize(2);
     }
 }
 
