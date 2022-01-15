@@ -21,7 +21,7 @@ public class MoviesController {
         this.reviewRestClient = reviewRestClient;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{movieId}")
     public Mono<Movie> retrieveMovieById(
             @PathVariable String movieId) {
 
