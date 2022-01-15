@@ -14,7 +14,8 @@ public class ReviewRouter {
     public RouterFunction<ServerResponse> reviewRoute(ReviewHandler reviewHandler) {
         return RouterFunctions.route()
                 .GET("/v1/helloworld", req -> ServerResponse.ok().bodyValue("helloworld"))
-                .POST(("/v1/reviews"), req -> reviewHandler.addReview(req))
+                .POST("/v1/reviews", req -> reviewHandler.addReview(req))
+                .GET("/v1/reviews", req -> reviewHandler.getAllReviews(req))
                 .build();
     }
 }

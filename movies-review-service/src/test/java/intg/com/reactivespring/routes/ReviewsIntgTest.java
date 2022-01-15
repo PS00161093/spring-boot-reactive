@@ -65,5 +65,17 @@ public class ReviewsIntgTest {
                     assertEquals(newReview.getComment(), savedReview.getComment());
                 });
     }
+
+    @Test
+    void testGetAllReviews() {
+        webTestClient
+                .get()
+                .uri(REVIEWS_CONTEXT_PATH)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(Review.class)
+                .hasSize(3);
+    }
 }
 
