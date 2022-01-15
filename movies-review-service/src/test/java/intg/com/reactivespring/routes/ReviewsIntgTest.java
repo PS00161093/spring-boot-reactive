@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -112,6 +113,25 @@ public class ReviewsIntgTest {
         webTestClient
                 .get()
                 .uri(REVIEWS_CONTEXT_PATH)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(Review.class)
+                .hasSize(2);
+    }
+
+    @Test
+    @Order(5)
+    void testGetReviewsByMovieInfoId() {
+       var uri =  UriComponentsBuilder
+                .fromUriString(REVIEWS_CONTEXT_PATH)
+                .queryParam("movieInfoId", "1")
+                .buildAndExpand()
+                .toUri();
+
+        webTestClient
+                .get()
+                .uri(uri)
                 .exchange()
                 .expectStatus()
                 .isOk()
