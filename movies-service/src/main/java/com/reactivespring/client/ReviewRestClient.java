@@ -9,20 +9,30 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
+import reactor.util.retry.RetryBackoffSpec;
+
+import java.time.Duration;
 
 @Component
 public class ReviewRestClient {
 
     private WebClient webClient;
 
-    public ReviewRestClient(WebClient webClient) { this.webClient = webClient; }
+    public ReviewRestClient(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     @Value("${restClient.reviewsUrl}")
     private String moviesInfoUrl;
 
     public Flux<Review> retrieveReviews(String movieId) {
+        RetryBackoffSpec retrySpec = Retry.fixedDelay(3, Duration.ofSeconds(1))
+                .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> Exceptions.propagate(retrySignal.failure()));
+
         String url = constructUrlForGetReviewsById(movieId);
         return webClient
                 .get()
@@ -31,7 +41,7 @@ public class ReviewRestClient {
                 .onStatus(HttpStatus::is4xxClientError, reviewsResponse -> handle4xxError(movieId, reviewsResponse))
                 .onStatus(HttpStatus::is5xxServerError, reviewsResponse -> handle5xxError(movieId, reviewsResponse))
                 .bodyToFlux(Review.class)
-                .retry(3)
+                .retryWhen(retrySpec)
                 .log();
     }
 
