@@ -2,6 +2,7 @@ package com.reactivespring.client;
 
 import com.reactivespring.domain.MovieInfo;
 import com.reactivespring.exception.MoviesInfoClientException;
+import com.reactivespring.exception.MoviesInfoServerException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -28,8 +29,16 @@ public class MoviesInfoRestClient {
                 .uri(url, movieId)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, moviesInfoResponse -> handle4xxError(movieId, moviesInfoResponse))
+                .onStatus(HttpStatus::is5xxServerError, moviesInfoResponse -> handle5xxError(movieId, moviesInfoResponse))
                 .bodyToMono(MovieInfo.class)
                 .log();
+    }
+
+    private Mono<Throwable> handle5xxError(String movieId, ClientResponse moviesInfoResponse) {
+        return moviesInfoResponse.bodyToMono(String.class)
+                .flatMap(responseMsg -> Mono.error(
+                        new MoviesInfoServerException("Server exception in MovieInfoService : " + responseMsg)
+                ));
     }
 
     private Mono<Throwable> handle4xxError(String movieId, ClientResponse moviesInfoResponse) {
