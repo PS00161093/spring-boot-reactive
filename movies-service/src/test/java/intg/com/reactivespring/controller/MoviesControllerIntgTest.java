@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestPropertySource(
         properties = {
                 "restClient.moviesInfoUrl=http://localhost:8084/v1/movieinfos",
-                "restClient.reviewsUrl=http://localhost:8081/v1/reviews"
+                "restClient.reviewsUrl=http://localhost:8084/v1/reviews"
         }
 )
 public class MoviesControllerIntgTest {
@@ -62,6 +62,65 @@ public class MoviesControllerIntgTest {
                     assertEquals(2005, movie.getMovieInfo().getYear());
                     assertEquals(2, movie.getMovieInfo().getCast().size());
                     assertEquals(2, movie.getReviewList().size());
+                });
+    }
+
+    @Test
+    void testRetrieveMovieByIdWith404ErrorFromMovieInfo() {
+        var mviId = 1;
+        WireMock.stubFor(
+                WireMock.get(WireMock.urlEqualTo("/v1/movieinfos" + "/" + mviId))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(404))
+        );
+
+        WireMock.stubFor(
+                WireMock.get(WireMock.urlPathEqualTo("/v1/reviews"))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withHeader("Content-type", "application/json")
+                                        .withBodyFile("reviews.json"))
+        );
+
+        webTestClient
+                .get()
+                .uri("/v1/movies/{id}", mviId)
+                .exchange()
+                .expectStatus()
+                .is4xxClientError();
+    }
+
+    @Test
+    void testRetrieveMovieById404ErrorFromReview() {
+        var mviId = 1;
+        WireMock.stubFor(
+                WireMock.get(WireMock.urlEqualTo("/v1/movieinfos" + "/" + mviId))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withHeader("Content-type", "application/json")
+                                        .withBodyFile("movieinfo.json"))
+        );
+
+        WireMock.stubFor(
+                WireMock.get(WireMock.urlPathEqualTo("/v1/reviews"))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(404))
+        );
+
+        webTestClient
+                .get()
+                .uri("/v1/movies/{id}", mviId)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(Movie.class)
+                .consumeWith(movieEntityExchangeResult -> {
+                    var movie = movieEntityExchangeResult.getResponseBody();
+                    assertNotNull(movie);
+                    assertEquals("Batman Begins", movie.getMovieInfo().getName());
+                    assertEquals(0, movie.getReviewList().size());
                 });
     }
 }
