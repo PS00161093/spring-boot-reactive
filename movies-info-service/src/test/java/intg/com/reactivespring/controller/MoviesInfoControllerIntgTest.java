@@ -76,7 +76,7 @@ class MoviesInfoControllerIntgTest {
 
     @Test
     void testGetAllMovieInfos() {
-        var allMovieInfosFlux = webTestClient
+        webTestClient
                 .get()
                 .uri(MOVIES_INFO_CONTEXT_PATH)
                 .exchange()
@@ -176,7 +176,7 @@ class MoviesInfoControllerIntgTest {
                 .buildAndExpand()
                 .toUri();
 
-        var allMovieInfosFlux = webTestClient
+        webTestClient
                 .get()
                 .uri(uri)
                 .exchange()
@@ -194,7 +194,7 @@ class MoviesInfoControllerIntgTest {
                 .buildAndExpand()
                 .toUri();
 
-        var allMovieInfosFlux = webTestClient
+        webTestClient
                 .get()
                 .uri(uri)
                 .exchange()
