@@ -185,4 +185,22 @@ class MoviesInfoControllerIntgTest {
                 .expectBodyList(MovieInfo.class)
                 .hasSize(1);
     }
+
+    @Test
+    void testGetAllMovieInfosWithNamePassed() {
+        var uri = UriComponentsBuilder
+                .fromUriString(MOVIES_INFO_CONTEXT_PATH)
+                .queryParam("name", "Dark Knight Rises")
+                .buildAndExpand()
+                .toUri();
+
+        var allMovieInfosFlux = webTestClient
+                .get()
+                .uri(uri)
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBodyList(MovieInfo.class)
+                .hasSize(1);
+    }
 }

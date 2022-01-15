@@ -4,6 +4,7 @@ import com.reactivespring.domain.MovieInfo;
 import com.reactivespring.service.MoviesInfoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,9 +41,11 @@ public class MoviesInfoController {
 
     @GetMapping("/movieinfos")
     public Flux<MovieInfo> getAllMovieInfos(
-            @RequestParam(value = "year", required = false) Integer year) {
+            @RequestParam(value = "year", required = false) Integer year,
+            @RequestParam(value = "name", required = false) String name) {
 
-        if(Objects.nonNull(year)) return moviesInfoService.findMovieInfosByYear(year).log();
+        if (Objects.nonNull(year)) return moviesInfoService.findMovieInfosByYear(year).log();
+        if (StringUtils.hasLength(name)) return moviesInfoService.findMovieInfosByName(name).log();
         return moviesInfoService.getAllMovieInfos().log();
     }
 
