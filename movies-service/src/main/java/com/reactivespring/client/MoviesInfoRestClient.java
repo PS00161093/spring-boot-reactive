@@ -5,6 +5,7 @@ import com.reactivespring.exception.MoviesInfoClientException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -26,18 +27,21 @@ public class MoviesInfoRestClient {
                 .get()
                 .uri(url, movieId)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, moviesInfoResponse -> {
-                    if (moviesInfoResponse.statusCode().equals(HttpStatus.NOT_FOUND)) {
-                        return Mono.error(
-                                new MoviesInfoClientException("No Movie available for passed movieId :" + movieId,
-                                        moviesInfoResponse.statusCode().value()));
-                    }
-                    return moviesInfoResponse.bodyToMono(String.class)
-                            .flatMap(responseMsg -> Mono.error(
-                                    new MoviesInfoClientException(responseMsg, moviesInfoResponse.statusCode().value())
-                            ));
-                })
+                .onStatus(HttpStatus::is4xxClientError, moviesInfoResponse -> handle4xxError(movieId, moviesInfoResponse))
                 .bodyToMono(MovieInfo.class)
                 .log();
+    }
+
+    private Mono<Throwable> handle4xxError(String movieId, ClientResponse moviesInfoResponse) {
+        if (moviesInfoResponse.statusCode().equals(HttpStatus.NOT_FOUND)) {
+            return Mono.error(
+                    new MoviesInfoClientException("No Movie available for passed movieId : " + movieId,
+                            moviesInfoResponse.statusCode().value()));
+        }
+
+        return moviesInfoResponse.bodyToMono(String.class)
+                .flatMap(responseMsg -> Mono.error(
+                        new MoviesInfoClientException(responseMsg, moviesInfoResponse.statusCode().value())
+                ));
     }
 }
