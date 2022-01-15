@@ -38,8 +38,8 @@ class MoviesInfoControllerUnitTest {
     private final MovieInfo movieInfo1 = new MovieInfo(null, "The Dark Knight",
             2008, List.of("Christian Bale", "HeathLedger"), LocalDate.parse("2008-07-18"));
 
-    private final MovieInfo movieInfoWithNoName = new MovieInfo("abc", "",
-            2012, List.of("Christian Bale", "Tom Hardy"), LocalDate.parse("2012-07-20"));
+    private final MovieInfo movieInfoWithInvalidInputs = new MovieInfo("abc", "",
+            -2012, List.of("Christian Bale", "Tom Hardy"), LocalDate.parse("2012-07-20"));
 
     private final static String MOVIE_ID = "abc";
 
@@ -108,19 +108,19 @@ class MoviesInfoControllerUnitTest {
 
     @Test
     void addMovieInfoWithValidation() {
-//        when(moviesInfoServiceMock.addMovieInfo(any())).thenReturn(Mono.just(movieInfoWithNoName));
         webTestClient
                 .post()
                 .uri(MOVIES_INFO_CONTEXT_PATH)
-                .bodyValue(movieInfoWithNoName)
+                .bodyValue(movieInfoWithInvalidInputs)
                 .exchange()
                 .expectStatus()
                 .isBadRequest()
                 .expectBody(String.class)
                 .consumeWith(stringEntityExchangeResult -> {
                     var responseBody = stringEntityExchangeResult.getResponseBody();
-                    System.out.println(responseBody);
+                    var expectedErrorMessage = "movieInfo.name must be present, movieInfo.year must be a positive value";
                     assertNotNull(responseBody);
+                    assertEquals(expectedErrorMessage, responseBody);
                 });
     }
 }
