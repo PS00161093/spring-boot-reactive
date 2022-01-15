@@ -133,7 +133,7 @@ class MoviesInfoControllerIntgTest {
     }
 
     @Test
-    void testDeleteMovieInfo(){
+    void testDeleteMovieInfo() {
         var moviesId = "abc";
         webTestClient
                 .delete()
@@ -141,5 +141,18 @@ class MoviesInfoControllerIntgTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
+    }
+
+    @Test
+    void testUpdateMovieInfoWhenMovieInfoIdNotFound() {
+        var movieId = "abcd";
+
+        webTestClient
+                .put()
+                .uri(MOVIES_INFO_CONTEXT_PATH + "/{id}", movieId)
+                .bodyValue(new MovieInfo())
+                .exchange()
+                .expectStatus()
+                .isNotFound();
     }
 }
