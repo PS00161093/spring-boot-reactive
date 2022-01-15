@@ -130,4 +130,22 @@ class MovieInfoRepositoryIntgTest {
         assertNull(deleteMovie);
     }
 
+    @Test
+    void testFindByYear() {
+        var allMoviesFlux =
+                movieInfoRepository
+                        .findByYear(2012)
+                        .log();
+
+        StepVerifier
+                .create(allMoviesFlux)
+                .assertNext(movieInfo -> {
+                    assertNotNull(movieInfo);
+                    assertNotNull(movieInfo.getMovieInfoId());
+                    assertEquals("Dark Knight Rises", movieInfo.getName());
+                    assertEquals(2012, movieInfo.getYear());
+                })
+                .verifyComplete();
+    }
+
 }

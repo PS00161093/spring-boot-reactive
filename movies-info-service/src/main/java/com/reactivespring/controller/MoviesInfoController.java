@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/v1")
@@ -37,8 +39,10 @@ public class MoviesInfoController {
     }
 
     @GetMapping("/movieinfos")
-    public Flux<MovieInfo> getAllMovieInfos() {
+    public Flux<MovieInfo> getAllMovieInfos(
+            @RequestParam(value = "year", required = false) Integer year) {
 
+        if(Objects.nonNull(year)) return moviesInfoService.findMovieInfosByYear(year).log();
         return moviesInfoService.getAllMovieInfos().log();
     }
 
