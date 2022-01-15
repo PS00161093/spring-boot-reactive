@@ -1,15 +1,27 @@
 package com.reactivespring.handler;
 
 import com.reactivespring.domain.Review;
+import com.reactivespring.exception.ReviewDataException;
 import com.reactivespring.repository.ReviewReactiveRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.stream.Collectors;
+
+
 @Component
+@Slf4j
 public class ReviewHandler {
+
+    @Autowired
+    private Validator validator;
 
     private ReviewReactiveRepository reviewReactiveRepository;
 
@@ -20,9 +32,23 @@ public class ReviewHandler {
     public Mono<ServerResponse> addReview(ServerRequest serverRequest) {
         return serverRequest
                 .bodyToMono(Review.class)
+                .doOnNext(this::validate)
                 .flatMap(review -> reviewReactiveRepository.save(review))
                 .flatMap(savedReview -> ServerResponse.status(HttpStatus.CREATED).bodyValue(savedReview))
                 .log();
+    }
+
+    private void validate(Review review) {
+        var violations = validator.validate(review);
+        if (!violations.isEmpty()) {
+            log.info("Violations : {}", violations);
+            var errorMsg = violations
+                    .stream()
+                    .map(ConstraintViolation::getMessage)
+                    .sorted()
+                    .collect(Collectors.joining(", "));
+            throw new ReviewDataException(errorMsg);
+        }
     }
 
     public Mono<ServerResponse> getAllReviews(ServerRequest serverRequest) {
