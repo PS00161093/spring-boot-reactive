@@ -30,4 +30,20 @@ public class ReviewHandler {
         var reviewsFlux = reviewReactiveRepository.findAll();
         return ServerResponse.ok().body(reviewsFlux, Review.class);
     }
+
+    public Mono<ServerResponse> updateReview(ServerRequest serverRequest) {
+        var id = serverRequest.pathVariable("id");
+        var existingReview = reviewReactiveRepository.findById(id);
+        return existingReview
+                .flatMap(review -> serverRequest.bodyToMono(Review.class)
+                        .map(reqReview -> {
+                            review.setComment(reqReview.getComment());
+                            review.setRating(reqReview.getRating());
+                            review.setMovieInfoId(reqReview.getMovieInfoId());
+                            return review;
+                        })
+                        .flatMap(updatedReview -> reviewReactiveRepository.save(updatedReview))
+                        .flatMap(savedReview -> ServerResponse.ok().bodyValue(savedReview))
+                );
+    }
 }

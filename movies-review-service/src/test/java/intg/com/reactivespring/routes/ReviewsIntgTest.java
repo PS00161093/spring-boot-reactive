@@ -32,7 +32,7 @@ public class ReviewsIntgTest {
     @BeforeEach
     void setUp() {
         var reviewsList = List.of(
-                new Review(null, 1L, "Awesome Movie", 9.0),
+                new Review("abc", 1L, "Awesome Movie", 9.0),
                 new Review(null, 1L, "Awesome Movie1", 9.0),
                 new Review(null, 2L, "Excellent Movie", 8.0));
 
@@ -76,6 +76,25 @@ public class ReviewsIntgTest {
                 .isOk()
                 .expectBodyList(Review.class)
                 .hasSize(3);
+    }
+
+    @Test
+    void testUpdateReview() {
+        var updatedMovie = new Review("abc", 1L, "Awesome Movie", 9.0);
+        updatedMovie.setComment("Awesome Movie - INTG update");
+        webTestClient
+                .put()
+                .uri(REVIEWS_CONTEXT_PATH + "/{id}", updatedMovie.getReviewId())
+                .bodyValue(updatedMovie)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(Review.class)
+                .consumeWith(reviewEntityExchangeResult -> {
+                    var review = reviewEntityExchangeResult.getResponseBody();
+                    assertNotNull(review);
+                    assertEquals(updatedMovie.getComment(), review.getComment());
+                });
     }
 }
 

@@ -17,7 +17,8 @@ public class ReviewRouter {
                 .nest(RequestPredicates.path("/v1/reviews"), builder ->
                         builder
                                 .POST("", req -> reviewHandler.addReview(req))
-                                .GET("", req -> reviewHandler.getAllReviews(req)))
+                                .GET("", req -> reviewHandler.getAllReviews(req))
+                                .PUT("/{id}", req -> reviewHandler.updateReview(req)))
                 .GET("/v1/helloworld", req -> ServerResponse.ok().bodyValue("helloworld"))
                 .build();
     }
