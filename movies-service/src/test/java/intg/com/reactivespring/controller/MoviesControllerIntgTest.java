@@ -2,7 +2,10 @@ package com.reactivespring.controller;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.reactivespring.domain.Movie;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
                 "restClient.reviewsUrl=http://localhost:8084/v1/reviews"
         }
 )
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MoviesControllerIntgTest {
 
     @Autowired
@@ -125,6 +129,7 @@ public class MoviesControllerIntgTest {
     }
 
     @Test
+    @Order(1)
     void testRetrieveMovieByIdWith5xxErrorFromMovieInfo() {
         var mviId = 1;
         WireMock.stubFor(
@@ -143,6 +148,8 @@ public class MoviesControllerIntgTest {
                 .is5xxServerError()
                 .expectBody(String.class)
                 .isEqualTo("Server exception in MovieInfoService : MovieInfo Service Unavailable");
+
+        WireMock.verify(4, WireMock.getRequestedFor(WireMock.urlEqualTo("/v1/movieinfos" + "/" + mviId)));
     }
 
     @Test

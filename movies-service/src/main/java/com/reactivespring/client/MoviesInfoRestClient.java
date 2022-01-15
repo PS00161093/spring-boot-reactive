@@ -29,6 +29,7 @@ public class MoviesInfoRestClient {
                 .onStatus(HttpStatus::is4xxClientError, moviesInfoResponse -> handle4xxError(movieId, moviesInfoResponse))
                 .onStatus(HttpStatus::is5xxServerError, moviesInfoResponse -> handle5xxError(movieId, moviesInfoResponse))
                 .bodyToMono(MovieInfo.class)
+                .retry(3)
                 .log();
     }
 

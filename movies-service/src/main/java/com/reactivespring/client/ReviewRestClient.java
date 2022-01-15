@@ -31,6 +31,7 @@ public class ReviewRestClient {
                 .onStatus(HttpStatus::is4xxClientError, reviewsResponse -> handle4xxError(movieId, reviewsResponse))
                 .onStatus(HttpStatus::is5xxServerError, reviewsResponse -> handle5xxError(movieId, reviewsResponse))
                 .bodyToFlux(Review.class)
+                .retry(3)
                 .log();
     }
 
