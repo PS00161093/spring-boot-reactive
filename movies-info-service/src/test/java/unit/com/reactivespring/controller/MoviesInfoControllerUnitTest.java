@@ -39,7 +39,7 @@ class MoviesInfoControllerUnitTest {
             2008, List.of("Christian Bale", "HeathLedger"), LocalDate.parse("2008-07-18"));
 
     private final MovieInfo movieInfoWithInvalidInputs = new MovieInfo("abc", "",
-            -2012, List.of("Christian Bale", "Tom Hardy"), LocalDate.parse("2012-07-20"));
+            -2012, List.of(""), LocalDate.parse("2012-07-20"));
 
     private final static String MOVIE_ID = "abc";
 
@@ -118,7 +118,7 @@ class MoviesInfoControllerUnitTest {
                 .expectBody(String.class)
                 .consumeWith(stringEntityExchangeResult -> {
                     var responseBody = stringEntityExchangeResult.getResponseBody();
-                    var expectedErrorMessage = "movieInfo.name must be present, movieInfo.year must be a positive value";
+                    var expectedErrorMessage = "movieInfo.cast must be present, movieInfo.name must be present, movieInfo.year must be a positive value";
                     assertNotNull(responseBody);
                     assertEquals(expectedErrorMessage, responseBody);
                 });
