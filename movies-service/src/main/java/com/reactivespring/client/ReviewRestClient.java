@@ -1,6 +1,7 @@
 package com.reactivespring.client;
 
 import com.reactivespring.domain.Review;
+import com.reactivespring.exception.MoviesInfoServerException;
 import com.reactivespring.exception.ReviewsClientException;
 import com.reactivespring.exception.ReviewsServerException;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ public class ReviewRestClient {
 
     public Flux<Review> retrieveReviews(String movieId) {
         RetryBackoffSpec retrySpec = Retry.fixedDelay(3, Duration.ofSeconds(1))
+                .filter(ex -> ex instanceof MoviesInfoServerException)
                 .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> Exceptions.propagate(retrySignal.failure()));
 
         String url = constructUrlForGetReviewsById(movieId);

@@ -126,6 +126,8 @@ public class MoviesControllerIntgTest {
                     assertEquals("Batman Begins", movie.getMovieInfo().getName());
                     assertEquals(0, movie.getReviewList().size());
                 });
+
+        WireMock.verify(1, WireMock.getRequestedFor(WireMock.urlPathEqualTo("/v1/reviews")));
     }
 
     @Test
