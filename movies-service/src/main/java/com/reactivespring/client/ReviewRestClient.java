@@ -4,6 +4,7 @@ import com.reactivespring.domain.Review;
 import com.reactivespring.exception.MoviesInfoServerException;
 import com.reactivespring.exception.ReviewsClientException;
 import com.reactivespring.exception.ReviewsServerException;
+import com.reactivespring.util.RetryUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -31,9 +32,6 @@ public class ReviewRestClient {
     private String moviesInfoUrl;
 
     public Flux<Review> retrieveReviews(String movieId) {
-        RetryBackoffSpec retrySpec = Retry.fixedDelay(3, Duration.ofSeconds(1))
-                .filter(ex -> ex instanceof MoviesInfoServerException)
-                .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> Exceptions.propagate(retrySignal.failure()));
 
         String url = constructUrlForGetReviewsById(movieId);
         return webClient
@@ -43,7 +41,7 @@ public class ReviewRestClient {
                 .onStatus(HttpStatus::is4xxClientError, reviewsResponse -> handle4xxError(movieId, reviewsResponse))
                 .onStatus(HttpStatus::is5xxServerError, reviewsResponse -> handle5xxError(movieId, reviewsResponse))
                 .bodyToFlux(Review.class)
-                .retryWhen(retrySpec)
+                .retryWhen(RetryUtils.retrySpec())
                 .log();
     }
 

@@ -3,6 +3,7 @@ package com.reactivespring.client;
 import com.reactivespring.domain.MovieInfo;
 import com.reactivespring.exception.MoviesInfoClientException;
 import com.reactivespring.exception.MoviesInfoServerException;
+import com.reactivespring.util.RetryUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ public class MoviesInfoRestClient {
                 .onStatus(HttpStatus::is4xxClientError, moviesInfoResponse -> handle4xxError(movieId, moviesInfoResponse))
                 .onStatus(HttpStatus::is5xxServerError, moviesInfoResponse -> handle5xxError(movieId, moviesInfoResponse))
                 .bodyToMono(MovieInfo.class)
-                .retry(3)
+                .retryWhen(RetryUtils.retrySpec())
                 .log();
     }
 
