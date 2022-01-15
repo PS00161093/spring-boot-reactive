@@ -155,4 +155,15 @@ class MoviesInfoControllerIntgTest {
                 .expectStatus()
                 .isNotFound();
     }
+
+    @Test
+    void testGetMovieInfoByIdWhenIDNotPresent() {
+        var movieId = "abcd";
+        webTestClient
+                .get()
+                .uri(MOVIES_INFO_CONTEXT_PATH + "/{id}", movieId)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
 }
