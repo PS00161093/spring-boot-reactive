@@ -138,5 +138,21 @@ public class ReviewsIntgTest {
                 .expectBodyList(Review.class)
                 .hasSize(2);
     }
+
+    @Test
+    @Order(6)
+    void testUpdateReviewWithReviewIdNotFound() {
+        var updatedMovie = new Review("abcd", 100L, "Awesome Movie", 9.0);
+        updatedMovie.setComment("Awesome Movie - INTG update");
+        webTestClient
+                .put()
+                .uri(REVIEWS_CONTEXT_PATH + "/{id}", updatedMovie.getReviewId())
+                .bodyValue(updatedMovie)
+                .exchange()
+                .expectStatus()
+                .isNotFound()
+                .expectBody(String.class)
+                .isEqualTo("Review not found for reviewId : abcd");
+    }
 }
 
