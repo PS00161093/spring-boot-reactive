@@ -123,4 +123,47 @@ public class MoviesControllerIntgTest {
                     assertEquals(0, movie.getReviewList().size());
                 });
     }
+
+    @Test
+    void testRetrieveMovieByIdWith5xxErrorFromMovieInfo() {
+        var mviId = 1;
+        WireMock.stubFor(
+                WireMock.get(WireMock.urlEqualTo("/v1/movieinfos" + "/" + mviId))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(500)
+                                        .withBody("MovieInfo Service Unavailable"))
+        );
+
+        webTestClient
+                .get()
+                .uri("/v1/movies/{id}", mviId)
+                .exchange()
+                .expectStatus()
+                .is5xxServerError()
+                .expectBody(String.class)
+                .isEqualTo("Server exception in MovieInfoService : MovieInfo Service Unavailable");
+    }
+
+    @Test
+    void testRetrieveMovieById5xxErrorFromReview() {
+        var mviId = 1;
+
+        WireMock.stubFor(
+                WireMock.get(WireMock.urlPathEqualTo("/v1/reviews"))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(500)
+                                        .withBody("Review Service Unavailable"))
+        );
+
+        webTestClient
+                .get()
+                .uri("/v1/movies/{id}", mviId)
+                .exchange()
+                .expectStatus()
+                .is5xxServerError()
+                .expectBody(String.class)
+                .isEqualTo("Server exception in ReviewService : Review Service Unavailable");
+    }
 }
