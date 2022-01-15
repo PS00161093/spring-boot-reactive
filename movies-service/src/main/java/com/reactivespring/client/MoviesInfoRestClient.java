@@ -15,9 +15,7 @@ public class MoviesInfoRestClient {
 
     private WebClient webClient;
 
-    public MoviesInfoRestClient(WebClient webClient) {
-        this.webClient = webClient;
-    }
+    public MoviesInfoRestClient(WebClient webClient) { this.webClient = webClient; }
 
     @Value("${restClient.moviesInfoUrl}")
     private String moviesInfoUrl;
@@ -34,13 +32,6 @@ public class MoviesInfoRestClient {
                 .log();
     }
 
-    private Mono<Throwable> handle5xxError(String movieId, ClientResponse moviesInfoResponse) {
-        return moviesInfoResponse.bodyToMono(String.class)
-                .flatMap(responseMsg -> Mono.error(
-                        new MoviesInfoServerException("Server exception in MovieInfoService : " + responseMsg)
-                ));
-    }
-
     private Mono<Throwable> handle4xxError(String movieId, ClientResponse moviesInfoResponse) {
         if (moviesInfoResponse.statusCode().equals(HttpStatus.NOT_FOUND)) {
             return Mono.error(
@@ -51,6 +42,13 @@ public class MoviesInfoRestClient {
         return moviesInfoResponse.bodyToMono(String.class)
                 .flatMap(responseMsg -> Mono.error(
                         new MoviesInfoClientException(responseMsg, moviesInfoResponse.statusCode().value())
+                ));
+    }
+
+    private Mono<Throwable> handle5xxError(String movieId, ClientResponse moviesInfoResponse) {
+        return moviesInfoResponse.bodyToMono(String.class)
+                .flatMap(responseMsg -> Mono.error(
+                        new MoviesInfoServerException("Server exception in MovieInfoService : " + responseMsg)
                 ));
     }
 }

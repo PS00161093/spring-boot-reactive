@@ -17,20 +17,13 @@ public class ReviewRestClient {
 
     private WebClient webClient;
 
-    public ReviewRestClient(WebClient webClient) {
-        this.webClient = webClient;
-    }
+    public ReviewRestClient(WebClient webClient) { this.webClient = webClient; }
 
     @Value("${restClient.reviewsUrl}")
     private String moviesInfoUrl;
 
     public Flux<Review> retrieveReviews(String movieId) {
-        var url = UriComponentsBuilder
-                .fromHttpUrl(moviesInfoUrl)
-                .queryParam("movieInfoId", movieId)
-                .buildAndExpand()
-                .toUriString();
-
+        String url = constructUrlForGetReviewsById(movieId);
         return webClient
                 .get()
                 .uri(url)
@@ -41,11 +34,12 @@ public class ReviewRestClient {
                 .log();
     }
 
-    private Mono<Throwable> handle5xxError(String movieId, ClientResponse reviewsResponse) {
-        return reviewsResponse.bodyToMono(String.class)
-                .flatMap(responseMsg -> Mono.error(
-                        new ReviewsServerException("Server exception in ReviewService : " + responseMsg)
-                ));
+    private String constructUrlForGetReviewsById(String movieId) {
+        return UriComponentsBuilder
+                .fromHttpUrl(moviesInfoUrl)
+                .queryParam("movieInfoId", movieId)
+                .buildAndExpand()
+                .toUriString();
     }
 
     private Mono<Throwable> handle4xxError(String movieId, ClientResponse reviewsResponse) {
@@ -53,6 +47,13 @@ public class ReviewRestClient {
         return reviewsResponse.bodyToMono(String.class)
                 .flatMap(responseMsg -> Mono.error(
                         new ReviewsClientException(responseMsg)
+                ));
+    }
+
+    private Mono<Throwable> handle5xxError(String movieId, ClientResponse reviewsResponse) {
+        return reviewsResponse.bodyToMono(String.class)
+                .flatMap(responseMsg -> Mono.error(
+                        new ReviewsServerException("Server exception in ReviewService : " + responseMsg)
                 ));
     }
 
