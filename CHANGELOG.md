@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- PS-65778 | Added new API [\#6](https://github.com/PS00161093/spring-boot-reactive-webflux/pull/6) ([PS00161093](https://github.com/PS00161093))
 - Update enpoint URL for flux generator [\#2](https://github.com/PS00161093/spring-boot-reactive-webflux/pull/2) ([PS00161093](https://github.com/PS00161093))
 
 **Merged pull requests:**
