@@ -1,0 +1,22 @@
+name: Changelog
+on:
+  pull_request:
+    types:
+      - closed
+jobs:
+  changelog:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.4.2
+        with: 
+          ref: ${{ secrets.ACC_TOK }}
+      - name: "✏️ Generate release changelog"
+        uses: heinrichreimer/github-changelog-generator-action@v2.3
+        with:
+          token: ${{ secrets.ACC_TOK }}
+      - name: "commit changelog file"
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: update change log file
+          branch: main
