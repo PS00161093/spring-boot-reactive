@@ -10,6 +10,7 @@
 
 **Merged pull requests:**
 
+- PS-1234 | updated Readme [\#4](https://github.com/PS00161093/spring-boot-reactive-webflux/pull/4) ([PS00161093](https://github.com/PS00161093))
 - PA-12345 | Corrected flux-genrator API endpoint path [\#3](https://github.com/PS00161093/spring-boot-reactive-webflux/pull/3) ([PS00161093](https://github.com/PS00161093))
 - Create actions.yml [\#1](https://github.com/PS00161093/spring-boot-reactive-webflux/pull/1) ([PS00161093](https://github.com/PS00161093))
 
