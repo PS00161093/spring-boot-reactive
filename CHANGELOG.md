@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/PS00161093/spring-boot-reactive-webflux/compare/2561b5f603e94949d006f867ab0702def810eb5b...HEAD)
 
+**Implemented enhancements:**
+
+- Update enpoint URL for flux generator [\#2](https://github.com/PS00161093/spring-boot-reactive-webflux/pull/2) ([PS00161093](https://github.com/PS00161093))
+
 **Merged pull requests:**
 
 - Create actions.yml [\#1](https://github.com/PS00161093/spring-boot-reactive-webflux/pull/1) ([PS00161093](https://github.com/PS00161093))
