@@ -11,7 +11,7 @@ import java.time.Duration;
 @RestController
 public class FluxAndMonoController {
 
-    @GetMapping("/flux")
+    @GetMapping("/flux-generator")
     public Flux<Integer> flux() {
         return Flux
                 .just(1, 2, 3)
