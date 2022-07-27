@@ -15,7 +15,7 @@ jobs:
         uses: cupcakearmy/confluence-markdown-sync@v1.0.1
         with:
           from: '/github/workspace/CHANGELOG.md'
-          to: 'PQPsDQ'
-          cloud: zalando
+          to: '233571133'
+          cloud: https://confluence.zalando.net/
           user: prashant.sharma@zalando.de
           token: ${{ secrets.CONF_ACC }} 
