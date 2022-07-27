@@ -20,4 +20,4 @@ jobs:
           destination_repo: 'PS00161093/leetcode-solutions'
           user_email: 'ps.arraha@gmail.com'
           user_name: 'PS00161093'
-          commit_message: 'updated change log'
+          commit_message: 'Updated change log'
