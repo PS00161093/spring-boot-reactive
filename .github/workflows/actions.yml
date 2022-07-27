@@ -7,16 +7,15 @@ jobs:
   changelog:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2.4.2
-        with: 
-          ref: ${{ secrets.ACC_TOK }}
       - name: "✏️ Generate release changelog"
         uses: heinrichreimer/github-changelog-generator-action@v2.3
         with:
           token: ${{ secrets.ACC_TOK }}
-      - name: "commit changelog file"
-        uses: stefanzweifel/git-auto-commit-action@v4
+      - name: confluence-changelog-sync
+        uses: cupcakearmy/confluence-markdown-sync@v1.0.1
         with:
-          commit_message: update change log file
-          branch: main
+          from: '/github/workspace/CHANGELOG.md'
+          to: PQPsDQ
+          cloud: https://confluence.zalando.net/
+          user: prashant.sharma@zalando.de
+          token: ${{ secrets.CONF_ACC }} 
