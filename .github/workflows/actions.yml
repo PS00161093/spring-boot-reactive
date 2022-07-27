@@ -11,11 +11,13 @@ jobs:
         uses: heinrichreimer/github-changelog-generator-action@v2.3
         with:
           token: ${{ secrets.ACC_TOK }}
-      - name: Markdown To Confluence
-        uses: TTengs/MarkdownToConfluence@v3
+      - name: Pushes test file
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.ACC_TOK }}
         with:
-          fileslocation: '/github/workspace/CHANGELOG.md'
-          confluence_url: https://confluence.zalando.net
-          confluence_space_key: SC
-          auth_username: prashant.sharma@zalando.de
-          auth_api_token: ${{ secrets.CONF_ACC }} 
+          source_file: '/github/workspace/CHANGELOG.md'
+          destination_repo: 'PS00161093/leetcode-solutions'
+          user_email: 'ps.arraha@gmail.com'
+          user_name: 'ps001610193'
+          commit_message: 'updated change log'
