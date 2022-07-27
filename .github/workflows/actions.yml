@@ -11,11 +11,11 @@ jobs:
         uses: heinrichreimer/github-changelog-generator-action@v2.3
         with:
           token: ${{ secrets.ACC_TOK }}
-      - name: confluence-changelog-sync
-        uses: cupcakearmy/confluence-markdown-sync@v1.0.1
+      - name: Markdown To Confluence
+        uses: TTengs/MarkdownToConfluence@v3
         with:
-          from: '/github/workspace/CHANGELOG.md'
-          to: '233571133'
-          cloud: https://confluence.zalando.net
-          user: prashant.sharma@zalando.de
-          token: ${{ secrets.CONF_ACC }} 
+          fileslocation: '/github/workspace/CHANGELOG.md'
+          confluence_url: https://confluence.zalando.net
+          confluence_space_key: SC
+          auth_username: prashant.sharma@zalando.de
+          auth_api_token: ${{ secrets.CONF_ACC }} 
