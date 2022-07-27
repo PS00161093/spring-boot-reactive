@@ -19,5 +19,5 @@ jobs:
           source_file: '/github/workspace/CHANGELOG.md'
           destination_repo: 'PS00161093/leetcode-solutions'
           user_email: 'ps.arraha@gmail.com'
-          user_name: 'ps001610193'
+          user_name: 'PS00161093'
           commit_message: 'updated change log'
